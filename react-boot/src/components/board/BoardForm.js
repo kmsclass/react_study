@@ -12,7 +12,7 @@ function BoardForm() {
     const [file2,setFile2] = useState("");     //첨부파일
     const { boardid } = useParams();           //게시판 종류 코드
     //이벤트 핸들러
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();  //기본 이벤트(submit 이벤트) 취소. 
         let fileinput = document.querySelector("#file2"); //선택한 파일의 내용
         try {
@@ -23,11 +23,21 @@ function BoardForm() {
             form.append("content",content);
             form.append("boardid",boardid);
             form.append("file2",fileinput.files[0]); //선택된 파일
-            fetch("http://localhost:8080/board/boardPro",{
-                method: "POST",
-                body : form
-            })
-            navigate("/board/boardList/"+boardid) //리다이렉트 하기 
+            //비동기 방식의 서버 요청 처리
+            // fetch("http://localhost:8080/board/boardPro",{
+            //     method: "POST",
+            //     body : form
+            // })
+            // navigate("/board/boardList/"+boardid) //리다이렉트 하기 => fetch 응답이 온 후 실행
+            // fetch 요청을 await으로 대기
+            const response = await fetch('http://localhost:8080/board/boardPro', {
+               method: 'POST',
+               body: form,
+            });     
+           if (response.ok) {
+             navigate("/board/boardList/"+boardid)
+           }       
+
         } catch (e) {
             console.log(e)
         } 
