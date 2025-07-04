@@ -4,7 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
 
 function BoardForm() {
-    const navigate = useNavigate();
+    const navigate = useNavigate();  //리다이렉트를 위한 훅
     const [gname,setGname] = useState("");     //글쓴이
     const [pass,setPass] = useState("");       //비밀번호
     const [subject,setSubject] = useState(""); //제목
@@ -14,14 +14,15 @@ function BoardForm() {
     //이벤트 핸들러
     const handleSubmit = (e) => {
         e.preventDefault();  //기본 이벤트(submit 이벤트) 취소. 
-        let fileinput = document.querySelector("#file2");
+        let fileinput = document.querySelector("#file2"); //선택한 파일의 내용
         try {
             const form = new FormData();
             form.append("name",gname);
             form.append("pass",pass);
             form.append("subject",subject);
             form.append("content",content);
-            form.append("file2",fileinput.files[0]);
+            form.append("boardid",boardid);
+            form.append("file2",fileinput.files[0]); //선택된 파일
             fetch("http://localhost:8080/board/boardPro",{
                 method: "POST",
                 body : form
